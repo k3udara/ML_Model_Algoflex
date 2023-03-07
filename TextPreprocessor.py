@@ -13,7 +13,6 @@ class TextAnalyzer:
     def extract_paragraphs(self, text):
         return re.split(r'\n+', text)
 
-
     def preprocess_paragraph(self, paragraph):
         # lowercase
         paragraph = paragraph.lower()
