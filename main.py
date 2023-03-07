@@ -1,16 +1,27 @@
-# This is a sample Python script.
+from fastapi import FastAPI,HTTPException
+from pydantic import BaseModel
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from TextPreprocessor import TextAnalyzer
+
+app = FastAPI()
+
+class userRequest(BaseModel):
+    searchQuery : str
+    paraArray: list
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+@app.get('/')
+async def simpleGet():
+    return {"hello" : "world"}
+
+# @app.get('/shal')
+# async def simpleGet():
+#     return {"name" : "Udara"}
+
+@app.post('/summarizer',response_model= str)
+async def getUserRequest(userR : userRequest):
+    mlmodel = TextAnalyzer()
+    summ = mlmodel.runnerClass(userR.paraArray,userR.searchQuery)
+    return summ
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
