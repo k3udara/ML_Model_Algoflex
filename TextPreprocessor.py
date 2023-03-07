@@ -1,12 +1,20 @@
 import re
+
 import nltk
+
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+from TextSummarizer import TextSummarizer
 
 
 class TextAnalyzer:
+    def __init__(self):
+        self.similarityArray = []
+
     def extract_paragraphs(self, text):
         return re.split(r'\n+', text)
 
@@ -25,8 +33,8 @@ class TextAnalyzer:
         lemmatizer = WordNetLemmatizer()
         words = [lemmatizer.lemmatize(word) for word in words]
         # join words back into a single string
-        preprocessed_paragraph = ' '.join(words)
-        return preprocessed_paragraph
+        # preprocessed_paragraph = ' '.join(words)
+        return words
 
     def preprocess_query(self, query):
         # lowercase
@@ -47,10 +55,10 @@ class TextAnalyzer:
         return preprocessed_query
 
 
-    def evaluate_correlation(self, query, paragraphs, TfidfVectorizer=None):
+    def evaluate_correlation(self, query, paragraphs):
         # Preprocess the query and paragraphs
         preprocessed_query = self.preprocess_query(query)
-        preprocessed_paragraphs = [self.preprocess_paragraph(para) for para in paragraphs]
+        preprocessed_paragraphs = self.preprocess_paragraph(paragraphs)
 
         # Create a Tf-Idf matrix of the paragraphs
         vectorizer = TfidfVectorizer()
@@ -63,12 +71,47 @@ class TextAnalyzer:
         # Return the index of the most similar paragraph
         return similarities.argmax()
 
-    # create an instance of TextAnalyzer
-analyzer = TextAnalyzer()
+    #runner class
+    def runnerClass(self, textArr, userQ):
+        for sent in textArr:
+            self.similarityArray.append(self.evaluate_correlation(userQ, sent))
 
-# process text
-text = "The Daman and Diu administration on Wednesday withdrew a circular that asked women staff to tie rakhis on male colleagues after the order triggered a backlash from employees and was ripped apart on social media.The union territory?s administration was forced to retreat within 24 hours of issuing the circular that made it compulsory for its staff to celebrate Rakshabandhan at workplace.?It has been decided to celebrate the festival of Rakshabandhan on August 7. In this connection, all offices/ departments shall remain open and celebrate the festival collectively at a suitable time wherein all the lady staff shall tie rakhis to their colleagues,? the order, issued on August 1 by Gurpreet Singh, deputy secretary (personnel), had said.To ensure that no one skipped office, an attendance report was to be sent to the government the next evening.The two notifications ? one mandating the celebration of Rakshabandhan (left) and the other withdrawing the mandate (right) ? were issued by the Daman and Diu administration a day apart. The circular was withdrawn through a one-line order issued late in the evening by the UT?s department of personnel and administrative reforms.?The circular is ridiculous. There are sensitivities involved. How can the government dictate who I should tie rakhi to? We should maintain the professionalism of a workplace? an official told Hindustan Times earlier in the day. She refused to be identified.The notice was issued on Daman and Diu administrator and former Gujarat home minister Praful Kodabhai Patel?s direction, sources said.Rakshabandhan, a celebration of the bond between brothers and sisters, is one of several Hindu festivities and rituals that are no longer confined of private, family affairs but have become tools to push politic al ideologies.In 2014, the year BJP stormed to power at the Centre, Rashtriya Swayamsevak Sangh (RSS) chief Mohan Bhagwat said the festival had ?national significance? and should be celebrated widely ?to protect Hindu culture and live by the values enshrined in it?. The RSS is the ideological parent of the ruling BJP.Last year, women ministers in the Modi government went to the border areas to celebrate the festival with soldiers. A year before, all cabinet ministers were asked to go to their constituencies for the festival."
-query = "administration"
+        senten_similarity_dict = {}
 
-extract_para = analyzer.extract_paragraphs(text)
-print(extract_para)
+        for i in range(len(textArr)):
+            key = textArr[i]
+            val = self.similarityArray[i]
+            print(val)
+            if val != 0:
+                senten_similarity_dict[key] = val
+
+        sorted_dict = sorted(senten_similarity_dict.items(), key=lambda item: item[1], reverse=True)
+
+        completeSent = ""
+        for sent in sorted_dict:
+            completeSent += sent[0]
+
+        summarizer = TextSummarizer()
+        summarizer.summarizeSentence(completeSent)
+        summarizedSentence = summarizer.returntheSummarizePara()
+        return summarizedSentence
+
+
+# analyzer = TextAnalyzer()
+# # #
+# # #
+# # #
+# textArr = ["However, building and operating quantum computers is extremely challenging due to the fragile nature of qubits and the difficulty of controlling and measuring them. One of the key challenges in building quantum computers is maintaining the coherence of the qubits. This refers to the ability of the qubits to remain in a superposition of states without being disturbed by their environment. In order to maintain coherence, researchers use a variety of techniques such as cooling the qubits to extremely low temperatures, shielding them from external electromagnetic fields, and developing error-correcting codes. Another challenge is the difficulty of performing operations on the qubits, which requires extremely precise control and measurement techniques. Despite these challenges, quantum computing is a rapidly advancing field with many exciting possibilities for the future."]
+# userQ = "Quantum Computing"
+# #
+# print(analyzer.runnerClass(textArr,userQ))
+
+# extract_para = analyzer.extract_paragraphs(text)
+# val = analyzer.evaluate_correlation(extract_para[0],"Administration")
+# print(val)
+
+# sorted_dict = dict(sorted(my_dict.items(), key=lambda item: item[1], reverse=True))
+# footballers_goals = {'Eusebio': 120, 'Cruyff': 104, 'Pele': 150, 'Ronaldo': 132, 'Messi': 125}
+#
+# sorted_footballers_by_goals = sorted(footballers_goals.items(), key=lambda x:x[1])
+# print(sorted_footballers_by_goals)
