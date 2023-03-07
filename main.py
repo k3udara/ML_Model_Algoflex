@@ -9,15 +9,6 @@ class userRequest(BaseModel):
     searchQuery : str
     paraArray: list
 
-
-@app.get('/')
-async def simpleGet():
-    return {"hello" : "world"}
-
-# @app.get('/shal')
-# async def simpleGet():
-#     return {"name" : "Udara"}
-
 @app.post('/summarizer',response_model= str)
 async def getUserRequest(userR : userRequest):
     mlmodel = TextAnalyzer()
