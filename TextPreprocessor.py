@@ -2,6 +2,7 @@ import re
 
 import nltk
 
+
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
@@ -74,6 +75,7 @@ class TextAnalyzer:
     #runner class
     def runnerClass(self, textArr, userQ):
         for sent in textArr:
+            print(sent)
             self.similarityArray.append(self.evaluate_correlation(userQ, sent))
 
         senten_similarity_dict = {}
