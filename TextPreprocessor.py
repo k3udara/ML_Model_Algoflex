@@ -89,12 +89,12 @@ class TextAnalyzer:
 
         sorted_dict = sorted(senten_similarity_dict.items(), key=lambda item: item[1], reverse=True)
 
-        completeSent = ""
+        completeSenten = ""
         for sent in sorted_dict:
-            completeSent += sent[0]
+            completeSenten += sent[0]
 
         summarizer = TextSummarizer()
-        summarizer.summarizeSentence(completeSent)
+        summarizer.summarizeSentence(completeSenten)
         summarizedSentence = summarizer.returntheSummarizePara()
         return summarizedSentence
 
