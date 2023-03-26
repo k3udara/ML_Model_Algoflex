@@ -20,5 +20,5 @@ class userRequest(BaseModel):
 @app.post('/summarizer')
 async def getUserRequest(userR : userRequest):
     mlmodel = TextAnalyzer()
-    summ =  mlmodel.runnerClass(userR.paraArray,userR.searchQuery)
+    summ =mlmodel.runnerClass(userR.paraArray,userR.searchQuery)
     return summ
