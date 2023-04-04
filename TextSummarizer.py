@@ -5,6 +5,8 @@ import pytextrank
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer, pipeline
 from bs4 import BeautifulSoup
 import requests
+
+
 class TextSummarizer:
 
     def __init__(self):
