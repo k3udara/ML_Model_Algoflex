@@ -91,10 +91,13 @@ class TextAnalyzer:
         for sent in sorted_dict:
             completeSenten += sent[0]
 
-        summarizer = TextSummarizer()
-        summarizer.summarizeSentence(completeSenten)
-        summarizedSentence = summarizer.returntheSummarizePara()
-        return summarizedSentence
+        if(completeSenten != ""):
+            summarizer = TextSummarizer()
+            summarizer.summarizeSentence(completeSenten)
+            summarizedSentence = summarizer.returntheSummarizePara()
+            return summarizedSentence
+        else:
+            return "No data available in the text you provided for the given query"
 
 
 # analyzer = TextAnalyzer()
